@@ -1,0 +1,43 @@
+//to get shardId, param --stream-name scg-attendance
+λ aws kinesis describe-stream --stream-name scg-attendance
+{
+    "StreamDescription": {
+        "KeyId": null,
+        "EncryptionType": "NONE",
+        "StreamStatus": "ACTIVE",
+        "StreamName": "scg-attendance",
+        "Shards": [
+            {
+                "ShardId": "shardId-000000000000",
+                "HashKeyRange": {
+                    "EndingHashKey": "340282366920938463463374607431768211455",
+                    "StartingHashKey": "0"
+                },
+                "SequenceNumberRange": {
+                    "StartingSequenceNumber": "49574519945664730021997064388923330317111694179220586498"
+                }
+            }
+        ],
+        "StreamARN": "arn:aws:kinesis:ap-southeast-2:389920326251:stream/scg-attendance",
+        "EnhancedMonitoring": [
+            {
+                "ShardLevelMetrics": []
+            }
+        ],
+        "StreamCreationTimestamp": 1498443870.0,
+        "RetentionPeriodHours": 24
+    }
+}
+//to get sard-iterator, params : --shard-id shardId-000000000000, --stream-name scg-attendance
+λ aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name scg-attendance
+{
+    "ShardIterator": "AAAAAAAAAAGQ1z0iRwBvW9bhcDTSU55rZ2WmWA+9VEH5iHaQHjP3tC3apnXW+SW4BdB4hBptpeyznDhQIj95YYiWETIg17mdSb3azMTKWVXwk11CnD94t3fUZf42dtkUKC5ISOCYfzH6tJ9HLk5Ez7NqXq6/XUw+YLFjftfFfKgsQLVEnrbzeXTGiqKvrkQv6jCcR54tlFsb6oS7OaqgC7AAhsWE7Ox6"
+}
+//to get records, params $SHARD_ITERATOR(got it from previus comand)
+$ aws kinesis get-records --shard-iterator $SHARD_ITERATOR                                                                                                                                                                                    
+{                                                                                                                                                                                                                                             
+    "Records": [],                                                                                                                                                                                                                            
+    "NextShardIterator": "AAAAAAAAAAEjgOTOZDBoOZIMxkJ19ygPvsRdjT4yibcWHgtYu+d90gKWCFsJ9798E7QNrn/kYdi7w98uQl8Zr2vUsB+LD9+dz2RD1A+fxP7Dj7xVeC5aQmiaKNwjNbV1ztCSTBfPOxyHjWQ/ZgbjnaeGmPBbtbnQyWHxkJegLK5aKoXYF+tWczx4E+9nsOZ2oaBT3bNGeV5u63a+Q1KY
+MyefafwKRGJ0",                                                                                                                                                                                                                                
+    "MillisBehindLatest": 0                                                                                                                                                                                                                   
+}                                                                                                                                                                                                                                             
