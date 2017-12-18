@@ -33,7 +33,7 @@ public class FromSharp {
 	private static int count = 0;
 	private static int backoff = 0;
 	// define the checkpoint file
-	private static final String SEQUNECE_CHECKPOINT_FILE = "C:/Users/User/.as/sequenceNumber.txt";
+	private static final String SEQUNECE_CHECKPOINT_FILE = "C:/Users/User/.aws/sequenceNumber.txt";
 
 	public static void main(String[] args) {
 		System.out.println("Read Records: Kinesis");
@@ -58,7 +58,7 @@ public class FromSharp {
 
 		// Init request with stream name
 		DescribeStreamRequest describeRequest = new DescribeStreamRequest();
-		describeRequest.setStreamName("scg-attendance");
+		describeRequest.setStreamName("!!!");
 
 		// Get list of shards on the stream
 		DescribeStreamResult describeResponse = client.describeStream(describeRequest);
@@ -88,10 +88,11 @@ public class FromSharp {
 		int readCnt = 0;
 		while (iteratorId.getString() != null) {
 
-			System.out.println("iterator : " + iteratorId.getString());
+			//System.out.println("iterator : " + iteratorId.getString());
 			System.out.print(".");
 			if (count++ > 40) {
 				count = 0;
+				System.out.println();
 			}
 
 			// Read the next batch of records
@@ -99,7 +100,7 @@ public class FromSharp {
 				try {
 					// We've caught up, or reached our back-off limit
 					// wait a sec before attempting another read so we don't exceed throughput.
-					Thread.sleep(10);
+					Thread.sleep(1);
 					readCnt = 0;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -124,7 +125,10 @@ public class FromSharp {
 		// call "get" operation and get everything in this shard range
 		GetRecordsResult getRecordsResult = client.getRecords(getRecordsRequest);
 		// get reference to next iterator for this shard
-		iteratorId.setString(getRecordsResult.getNextShardIterator());
+		String nextShardIterator = getRecordsResult.getNextShardIterator();
+//		System.out.println(nextShardIterator);
+		iteratorId.setString(nextShardIterator);
+		
 
 		// print out each record's data value
 		for (Record record : getRecordsResult.getRecords()) {
